@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %} ELIMINAR-EDITOR {% endblock %}
+{% block content %}
+<form action="" method="post">
+    <h3>¿Desea eliminar el registro del editor: {{ editor_data.nombre }}?</h3>
+    <button class="btn btn-danger" type="submit">Sí, eliminar</button>
+    <a class="btn btn-info" href="javascript:history.back();">Cancelar</a>
+</form>
+{% endblock %}

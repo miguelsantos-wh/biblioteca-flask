@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %} DETALLE-AUTOR {% endblock %}
+{% block content %}
+<div id="verE">
+ <h3>Información del autor</h3>
+<form method="post">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+                <label for="#">#</label>
+				<input value="{{autor_id}}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Nombre completo</label>
+				<input  value="{{ autor.nombre }} {{ autor.apellidos }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Correo electrónico</label>
+				<input value="{{ autor.email }}">
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-md-offset-1">
+			<div class="form-group">
+                <a class="btn btn-info" href="javascript:history.back();">Regresar</a>
+			</div>
+		</div>
+</form>
+</div>
+{% endblock %}
+{% block extrajs %}
+    <script type="text/javascript">
+        $("#verE :input").prop("disabled", true);
+    </script>
+{% endblock %}

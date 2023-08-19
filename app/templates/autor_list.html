@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %} LISTA-AUTORES {% endblock %}
+{% block content %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>#</td>
+            <td>Nombre completo</td>
+            <td>Correo electrónico</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% if autores %}
+        {% for autor in autores %}
+        <tr>
+            <td>{{ autor.id }}</td>
+            <td>{{ autor.to_dict().nombre }} {{ autor.to_dict().apellidos }}</td>
+            <td>{{ autor.to_dict().email }}</td>
+            <td>
+                <a class="btn btn-info" href="{{ url_for('obtener_autor', autor_id=autor.id) }}" >Ver autor</a>
+                <a class="btn btn-primary" href="{{ url_for('editar_autor', autor_id=autor.id) }}" >Editar</a>
+                <a class="btn btn-danger" href="{{ url_for('eliminar_autor', autor_id=autor.id) }}" >Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <h1>No Hay Registros de Autores</h1>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

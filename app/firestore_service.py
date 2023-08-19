@@ -33,32 +33,32 @@ def get_autor(autor_id):
 
 def put_libro(libro_data):
     libro_put = {
-        'titulo': libro_data.titulo,
-        'fecha_publicacion': libro_data.fecha_publicacion,
-        'portada': libro_data.portada,
-        'editor_id': libro_data.editor_id,
-        'autores_id': libro_data.autores.id,
+        'titulo': libro_data.titulo.data,
+        'fecha_publicacion': libro_data.fecha_publicacion.data,
+        'portada': libro_data.portada.data,
+        'editor_id': libro_data.editor_id.data,
+        'autores_id': libro_data.autores.id.data,
     }
     db.collection('libros').add(libro_put)
 
 
 def put_editor(editor_data):
     editor_put = {
-        'nombre': editor_data.nombre,
-        'domicilio': editor_data.domicilio,
-        'ciudad': editor_data.ciudad,
-        'estado': editor_data.estado,
-        'pais': editor_data.pais,
-        'website': editor_data.website,
+        'nombre': editor_data.get("nombre"),
+        'domicilio': editor_data.get("domicilio"),
+        'ciudad': editor_data.get("ciudad"),
+        'estado': editor_data.get("estado"),
+        'pais': editor_data.get("pais"),
+        'website': editor_data.get("website"),
     }
     db.collection('editores').add(editor_put)
 
 
 def put_autor(autor_data):
     autor_put = {
-        'nombre': autor_data.nombre,
-        'apellidos': autor_data.apellidos,
-        'email': autor_data.email,
+        'nombre': autor_data.nombre.data,
+        'apellidos': autor_data.apellidos.data,
+        'email': autor_data.email.data,
     }
     db.collection('autores').add(autor_put)
 
@@ -74,24 +74,24 @@ def update_libro(libro_data):
     })
 
 
-def update_editor(editor_data):
-    editor_ref = db.collection('editores').document(editor_data.id)
+def update_editor(editor_data, editor_id):
+    editor_ref = db.collection('editores').document(editor_id)
     editor_ref.update({
-        'nombre': editor_data.nombre,
-        'domicilio': editor_data.domicilio,
-        'ciudad': editor_data.ciudad,
-        'estado': editor_data.estado,
-        'pais': editor_data.pais,
-        'website': editor_data.website,
+        'nombre': editor_data.nombre.data,
+        'domicilio': editor_data.domicilio.data,
+        'ciudad': editor_data.ciudad.data,
+        'estado': editor_data.estado.data,
+        'pais': editor_data.pais.data,
+        'website': editor_data.website.data,
     })
 
 
-def update_autor(autor_data):
-    autor_ref = db.collection('autores').document(autor_data.id)
+def update_autor(autor_data, autor_id):
+    autor_ref = db.collection('autores').document(autor_id)
     autor_ref.update({
-        'nombre': autor_data.nombre,
-        'apellidos': autor_data.apellidos,
-        'email': autor_data.email,
+        'nombre': autor_data.nombre.data,
+        'apellidos': autor_data.apellidos.data,
+        'email': autor_data.email.data,
     })
 
 

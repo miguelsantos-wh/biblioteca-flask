@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %} ELIMINAR-AUTOR {% endblock %}
+{% block content %}
+<form action="" method="post">
+    <h3>¿Desea eliminar el registro del autor: {{ autor_data.nombre }} {{ autor_data.apellidos }}?</h3>
+    <button class="btn btn-danger" type="submit">Sí, eliminar</button>
+    <a class="btn btn-info" href="javascript:history.back();">Cancelar</a>
+</form>
+{% endblock %}

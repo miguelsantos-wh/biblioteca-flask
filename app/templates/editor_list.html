@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} LISTA-EDITORES {% endblock %}
+{% block content %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>#</td>
+            <td>Nombre</td>
+            <td>País</td>
+            <td>Pagina Web</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% if editores %}
+        {% for editor in editores %}
+        <tr>
+            <td>{{ editor.id }}</td>
+            <td>{{ editor.to_dict().nombre }}</td>
+            <td>{{ editor.to_dict().pais }}</td>
+            <td><a class="btn btn-warning related-lookup" href="{{ editor.to_dict().website }}"
+                   target="_blank">Visitar</a> {{ editor.to_dict().website }}
+            </td>
+            <td>
+                <a class="btn btn-info" href="{{ url_for('obtener_editor', editor_id=editor.id) }}" >Ver editor</a>
+                <a class="btn btn-primary" href="{{ url_for('editar_editor', editor_id=editor.id) }}" >Editar</a>
+                <a class="btn btn-danger" href="{{ url_for('eliminar_editor', editor_id=editor.id) }}" >Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+            <h1>No Hay Registros de Editores</h1>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

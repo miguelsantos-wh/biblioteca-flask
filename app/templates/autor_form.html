@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} FORMULARIO-AUTORES {% endblock %}
+{% block content %}
+    <form action="" method="post">
+        {{ autor_form.hidden_tag() }}
+        {% for field in autor_form if field.type != 'CSRFTokenField' %}
+            <div class="form-group">
+                {{ field.label(class="control-label") }}
+                {{ field(class="form-control") }}
+            </div>
+        {% endfor %}
+        <button class="btn btn-success" type="submit">Guardar</button>
+        <a class="btn btn-info" href="javascript:history.back();">Regresar</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %} DETALLE-EDITOR {% endblock %}
+{% block content %}
+<div id="verE">
+ <h3>Información del editor</h3>
+<form method="post">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+                <label for="#">#</label>
+				<input value="{{ editor_id }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Nombre completo</label>
+				<input value="{{ editor.nombre }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Domicilio</label>
+				<input value="{{ editor.domicilio }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Ciudad</label>
+				<input value="{{ editor.ciudad }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Estado</label>
+				<input value="{{ editor.estado }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">País</label>
+				<input value="{{editor.pais}}">
+			</div>
+		</div>
+        <div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Página web</label>
+				<input value="{{editor.website}}"><a class="btn btn-warning" href="{{ editor.website }}" target="_blank">Ir</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-md-offset-1">
+			<div class="form-group">
+                <a class="btn btn-info" href="javascript:history.back();">Regresar</a>
+			</div>
+		</div>
+</form>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $("#verE :input").prop("disabled", true);
+    </script>
+{% endblock %}

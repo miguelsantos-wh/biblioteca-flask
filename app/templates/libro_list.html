@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} LISTA-LIBROS {% endblock %}
+{% block content %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>#</td>
+            <td>Titulo</td>
+            <td>Autores</td>
+            <td>Fecha de publicacón</td>
+            <td>Acciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% if libros %}
+        {% for libro in libros %}
+        <tr>
+            <td>{{ libro.id }}</td>
+            <td>{{ libro.to_dict().titulo }}</td>
+            <td>{% for autor in libro.to_dict().autores.values %}
+                {{ autor.nombre }} {{ autor.apellidos }}{% if not forloop.last %},{% endif %}
+                {% endfor %}</td>
+            <td>{{ libro.to_dict().fecha_publicacion }}</td>
+            <td>
+                <a class="btn btn-info" href="#" >Ver libro</a>
+                <a class="btn btn-primary" href="#" >Editar</a>
+                <a class="btn btn-danger" href="#" >Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <h1>No Hay Registros de Libros</h1>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}
