@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
-from flask_uploads import UploadSet, configure_uploads, IMAGES
+# from flask_uploads import UploadSet, configure_uploads, IMAGES
 # from flask_login import LoginManager
+# from werkzeug.utils import secure_filename
 
 from .config import Config
 # from .auth import auth
@@ -21,12 +22,13 @@ def create_app():
     bootstrap = Bootstrap(app)
 
     app.config['SECRET_KEY'] = 'SUPER SECRETO'
+    app.config['UPLOADED_PHOTOS_DEST'] = 'media'
     app.config.from_object(Config)
 
     # Configuración de la carga de archivos
-    app.config['UPLOADED_PHOTOS_DEST'] = 'media'  # Carpeta para guardar las imágenes
-    photos = UploadSet('photos', IMAGES)
-    configure_uploads(app, photos)
+    # app.config['UPLOADED_PHOTOS_DEST'] = 'uploads/images'  # Carpeta para guardar las imágenes
+    # photos = UploadSet('photos', IMAGES)
+    # configure_uploads(app, photos)
 
     # login_manager.init_app(app)
 

@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms.fields import (StringField, PasswordField, SubmitField, EmailField, FileField, SelectField,
                             SelectMultipleField, DateField)
 from wtforms.validators import DataRequired
-
+from wtforms import widgets
 
 
 class AgregarEditorForm(FlaskForm):
@@ -20,9 +20,14 @@ class AgregarAutorForm(FlaskForm):
     email = EmailField('Correo electrónico: ', render_kw={"class": "form-control"}, validators=[DataRequired()])
 
 
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
 class AgregarLibroForm(FlaskForm):
     titulo = StringField('Titulo del libro: ', render_kw={"class": "form-control"}, validators=[DataRequired()])
-    autores_id = SelectMultipleField('Autores', coerce=str, render_kw={"class": "form-control"}, validators=[DataRequired()])
-    editor_id = SelectField('Editor', coerce=str, render_kw={"class": "form-control"}, validators=[DataRequired()])
-    fecha_publicacion = DateField('Fecha de publicación', format='%Y-%m-%d', render_kw={"class": "form-control"}, validators=[DataRequired()])
-    portada = FileField('Portada', render_kw={"class": "form-control"}, validators=[DataRequired()])
+    autores_id = MultiCheckboxField('Autores: ', coerce=str, validators=[DataRequired()])
+    editor_id = SelectField('Editor: ', coerce=str, render_kw={"class": "form-control"}, validators=[DataRequired()])
+    fecha_publicacion = DateField('Fecha de publicación: ', format='%Y-%m-%d', render_kw={"class": "form-control"}, validators=[DataRequired()])
+    portada = FileField('Portada: ', render_kw={"class": "form-control"}, validators=[DataRequired()])

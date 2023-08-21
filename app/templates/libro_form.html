@@ -2,16 +2,16 @@
 {% block title %} FORMULARIO-LIBROS {% endblock %}
 {% block content %}
     <form action="" method="post" enctype="multipart/form-data">
-        {% if libro_form.instance.portada.url or None%}
+        {% if libro_form.portada.url or None%}
         <div style="text-align: center;">
-            <img src="{{ libro_form.instance.portada.url }}/"  width="100" height="100">
+            <img src="{{ libro_form.portada.url }}/"  width="100" height="100">
         </div>
         {% endif %}
-        {{ autor_form.hidden_tag() }}
+        {{ libro_form.hidden_tag() }}
         {% for field in libro_form if field.type != 'CSRFTokenField' %}
             <div class="form-group">
                 {{ field.label(class="control-label") }}
-                {{ field(class="form-control") }}
+                {{ field() }}
             </div>
         {% endfor %}
         <button class="btn btn-success" type="submit">Guardar</button>

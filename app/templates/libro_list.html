@@ -16,9 +16,9 @@
         {% for libro in libros %}
         <tr>
             <td>{{ libro.id }}</td>
-            <td>{{ libro.to_dict().titulo }}</td>
-            <td>{% for autor in libro.to_dict().autores.values %}
-                {{ autor.nombre }} {{ autor.apellidos }}{% if not forloop.last %},{% endif %}
+            <td>{{ libro.titulo }}</td>
+            <td>{% for autor in libro.to_dict().autores_id %}
+                {{ autores[autor].nombre }} {{ autores[autor].apellidos }} {% if not loop.last %},{% endif %}
                 {% endfor %}</td>
             <td>{{ libro.to_dict().fecha_publicacion }}</td>
             <td>

@@ -1,12 +1,17 @@
 import unittest
+import os
 
 from flask import Flask
 from app import create_app
+from datetime import datetime
+from google.cloud import firestore
 from flask import Flask, request, make_response, redirect, render_template, session, url_for, flash
 
 from app.firestore_service import (get_editores, put_editor, get_editor, update_editor, delete_editor, get_autores,
-                                   put_autor, get_autor, update_autor, delete_autor)
+                                   put_autor, get_autor, update_autor, delete_autor, update_libro, put_libro,
+                                   get_libros)
 from app.forms import AgregarEditorForm, AgregarAutorForm, AgregarLibroForm
+from werkzeug.utils import secure_filename
 
 app = create_app()
 
@@ -161,8 +166,22 @@ def eliminar_autor(autor_id):
 
 @app.route('/libros/lista/')
 def lista_libros():
+    libros = get_libros()
     autores = get_autores()
-    return render_template('autor_list.html', autores=autores)
+    autores_data = {}
+    for autor in autores:
+        autores_data[autor.id] = autor.to_dict()
+    # for libro in libros:
+    #     libro = libro.to_dict()
+    #     autores_id = libro.get('autores_id')
+    #     autores = []
+    #     if autores_id:
+    #         for autor in autores_id:
+    #             autores.append(get_autor(autor))
+    #     libro.update({'autores': autores})
+    #     libros_data.append(libro)
+
+    return render_template('libro_list.html', libros=libros, autores=autores_data)
 
 
 @app.route('/libros/agregar/', methods=['GET', 'POST'])
@@ -172,14 +191,21 @@ def agregar_libro():
     autores = get_autores()
 
     # Llenar opciones del campo "Editor"
-    libro_form.editor.choices = [(editor.id, editor.to_dict()['nombre']) for editor in editores]
+    libro_form.editor_id.choices = [(editor.id, editor.to_dict()['nombre']) for editor in editores]
 
     # Llenar opciones del campo "Autores"
-    libro_form.autores.choices = [(autor.id, autor.to_dict()['nombre']) for autor in autores]
+    libro_form.autores_id.choices = [(autor.id, autor.to_dict()['nombre']) for autor in autores]
 
     if libro_form.validate_on_submit():
-        put_autor(libro_form)
+        portada = libro_form.portada.data  # Obtener la imagen subida
+        filename = secure_filename(portada.filename)
+        portada_path = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
+        portada.save(portada_path)
+        fecha_publicacion_str = libro_form.fecha_publicacion.data.strftime('%Y-%m-%d')
+        fecha_publicacion = datetime.strptime(fecha_publicacion_str, '%Y-%m-%d')
+        fecha_timestamp = firestore.SERVER_TIMESTAMP if fecha_publicacion is None else fecha_publicacion
+        put_libro(libro_form, portada_path, fecha_timestamp)
         flash('Libro agregado con éxito!')
         return redirect(url_for('lista_autores'))
 
-    return render_template('llbro_form.html', libro_form=libro_form)
+    return render_template('libro_form.html', libro_form=libro_form)
