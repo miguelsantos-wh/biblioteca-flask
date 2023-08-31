@@ -5,11 +5,12 @@ from flask import Flask
 from app import create_app
 from datetime import datetime
 from google.cloud import firestore
-from flask import Flask, request, make_response, redirect, render_template, session, url_for, flash
+from flask import (Flask, request, make_response, redirect, render_template, session, url_for, flash,
+                   send_from_directory)
 
 from app.firestore_service import (get_editores, put_editor, get_editor, update_editor, delete_editor, get_autores,
-                                   put_autor, get_autor, update_autor, delete_autor, update_libro, put_libro,
-                                   get_libros)
+                                   put_autor, get_autor, update_autor, delete_autor, put_libro,
+                                   get_libros, get_libro, update_libro, delete_libro)
 from app.forms import AgregarEditorForm, AgregarAutorForm, AgregarLibroForm
 from werkzeug.utils import secure_filename
 
@@ -197,15 +198,102 @@ def agregar_libro():
     libro_form.autores_id.choices = [(autor.id, autor.to_dict()['nombre']) for autor in autores]
 
     if libro_form.validate_on_submit():
-        portada = libro_form.portada.data  # Obtener la imagen subida
-        filename = secure_filename(portada.filename)
-        portada_path = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
-        portada.save(portada_path)
+        portada = libro_form.portada.data  # Obtener la imagen
+        portada_path = ''
+        if portada:
+            filename = secure_filename(portada.filename)
+            portada_path = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
+            portada.save(portada_path)
         fecha_publicacion_str = libro_form.fecha_publicacion.data.strftime('%Y-%m-%d')
         fecha_publicacion = datetime.strptime(fecha_publicacion_str, '%Y-%m-%d')
         fecha_timestamp = firestore.SERVER_TIMESTAMP if fecha_publicacion is None else fecha_publicacion
         put_libro(libro_form, portada_path, fecha_timestamp)
         flash('Libro agregado con éxito!')
-        return redirect(url_for('lista_autores'))
+        return redirect(url_for('lista_libros'))
 
     return render_template('libro_form.html', libro_form=libro_form)
+
+
+# Configuración de la ruta estática para la carpeta de medios
+@app.route('/media/<path:filename>')
+def media_files(filename):
+    return send_from_directory('media', filename)
+
+
+@app.route('/libros/<libro_id>/')
+def obtener_libro(libro_id):
+    libro_data = get_libro(libro_id)
+    editores = get_editores()
+    autores = get_autores()
+    editores_data, autores_data = {}, {}
+
+    for editor in editores:
+        editores_data[editor.id] = editor.to_dict()
+
+    for autor in autores:
+        autores_data[autor.id] = autor.to_dict()
+
+    if libro_data.exists:
+        libro = libro_data.to_dict()
+    else:
+        flash('El libro no existe!', 'error')
+        return redirect(url_for('lista_libros'))
+    return render_template('libro_detail.html', libro=libro, libro_id=libro_id, autores=autores_data,
+                           editores=editores_data)
+
+
+@app.route('/libros/modificar/<libro_id>/', methods=['GET', 'POST'])
+def editar_libro(libro_id):
+    libro_data = get_libro(libro_id)
+    libro_form = AgregarLibroForm()
+    editores = get_editores()
+    autores = get_autores()
+    editores_data, autores_data = {}, {}
+    for editor in editores:
+        editores_data[editor.id] = editor.to_dict()
+
+    for autor in autores:
+        autores_data[autor.id] = autor.to_dict()
+    if request.method == 'GET':
+
+        if libro_data.exists:
+            libro = libro_data.to_dict()
+            libro_form = AgregarLibroForm(data=libro)
+            libro_form.editor_id.choices = [(editor.id, editor.to_dict()['nombre']) for editor in editores]
+            libro_form.autores_id.choices = [(autor.id, autor.to_dict()['nombre']) for autor in autores]
+        else:
+            flash('El libro no existe!', 'error')
+            return redirect(url_for('lista_libros'))
+    else:
+        libro_form.editor_id.choices = [(editor.id, editor.to_dict()['nombre']) for editor in editores]
+        libro_form.autores_id.choices = [(autor.id, autor.to_dict()['nombre']) for autor in autores]
+        if libro_form.validate_on_submit():
+            portada = libro_form.portada.data  # Obtener la imagen
+            portada_path = libro_data.to_dict().get('portada')
+            if portada:
+                filename = secure_filename(portada.filename)
+                portada_path = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
+                portada.save(portada_path)
+            fecha_publicacion_str = libro_form.fecha_publicacion.data.strftime('%Y-%m-%d')
+            fecha_publicacion = datetime.strptime(fecha_publicacion_str, '%Y-%m-%d')
+            fecha_timestamp = firestore.SERVER_TIMESTAMP if fecha_publicacion is None else fecha_publicacion
+            update_libro(libro_form, libro_id, portada_path, fecha_timestamp)
+            flash('Libro modificado con éxito!')
+            return redirect(url_for('lista_libros'))
+    return render_template('libro_form.html', libro_data=libro, libro_form=libro_form)
+
+
+@app.route('/libros/elimiar/<libro_id>/', methods=['GET', 'POST'])
+def eliminar_libro(libro_id):
+    libro_data = get_libro(libro_id)
+    if request.method == 'GET':
+        if libro_data.exists:
+            libro = libro_data.to_dict()
+        else:
+            flash('El libro no existe!', 'error')
+            return redirect(url_for('lista_libros'))
+    else:
+        delete_libro(libro_id)
+        flash('Libro eliminado con éxito!')
+        return redirect(url_for('lista_libros'))
+    return render_template('libro_delete.html', libro_data=libro)

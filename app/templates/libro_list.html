@@ -16,15 +16,15 @@
         {% for libro in libros %}
         <tr>
             <td>{{ libro.id }}</td>
-            <td>{{ libro.titulo }}</td>
+            <td>{{ libro.to_dict().titulo }}</td>
             <td>{% for autor in libro.to_dict().autores_id %}
                 {{ autores[autor].nombre }} {{ autores[autor].apellidos }} {% if not loop.last %},{% endif %}
                 {% endfor %}</td>
             <td>{{ libro.to_dict().fecha_publicacion }}</td>
             <td>
-                <a class="btn btn-info" href="#" >Ver libro</a>
-                <a class="btn btn-primary" href="#" >Editar</a>
-                <a class="btn btn-danger" href="#" >Eliminar</a>
+                <a class="btn btn-info" href="{{ url_for('obtener_libro', libro_id=libro.id) }}" >Ver libro</a>
+                <a class="btn btn-primary" href="{{ url_for('editar_libro', libro_id=libro.id) }}" >Editar</a>
+                <a class="btn btn-danger" href="{{ url_for('eliminar_libro', libro_id=libro.id) }}" >Eliminar</a>
             </td>
         </tr>
         {% endfor %}

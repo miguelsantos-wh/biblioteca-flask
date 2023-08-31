@@ -31,7 +31,7 @@ def get_autor(autor_id):
     return db.collection('autores').document(autor_id).get()
 
 
-def put_libro(libro_data, portada_path,fecha_publicacion):
+def put_libro(libro_data, portada_path, fecha_publicacion):
     libro_put = {
         'titulo': libro_data.titulo.data,
         'fecha_publicacion': fecha_publicacion,
@@ -63,11 +63,11 @@ def put_autor(autor_data):
     db.collection('autores').add(autor_put)
 
 
-def update_libro(libro_data, portada_path):
-    libro_ref = db.collection('libros').document(libro_data_id)
+def update_libro(libro_data, libro_id, portada_path, fecha_publicacion):
+    libro_ref = db.collection('libros').document(libro_id)
     libro_ref.update({
         'titulo': libro_data.titulo.data,
-        'fecha_publicacion': libro_data.fecha_publicacion.data,
+        'fecha_publicacion': fecha_publicacion,
         'portada': portada_path,
         'editor_id': libro_data.editor_id.data,
         'autores_id': libro_data.autores_id.data,

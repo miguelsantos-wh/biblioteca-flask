@@ -27,7 +27,7 @@ class MultiCheckboxField(SelectMultipleField):
 
 class AgregarLibroForm(FlaskForm):
     titulo = StringField('Titulo del libro: ', render_kw={"class": "form-control"}, validators=[DataRequired()])
-    autores_id = MultiCheckboxField('Autores: ', coerce=str, validators=[DataRequired()])
+    autores_id = MultiCheckboxField('Autores: ', coerce=str)
     editor_id = SelectField('Editor: ', coerce=str, render_kw={"class": "form-control"}, validators=[DataRequired()])
     fecha_publicacion = DateField('Fecha de publicación: ', format='%Y-%m-%d', render_kw={"class": "form-control"}, validators=[DataRequired()])
-    portada = FileField('Portada: ', render_kw={"class": "form-control"}, validators=[DataRequired()])
+    portada = FileField('Portada: ', render_kw={"class": "form-control"})

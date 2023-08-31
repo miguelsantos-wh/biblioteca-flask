@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %} DETALLE-EDITOR {% endblock %}
+{% block content %}
+<div id="verE">
+ <h3>Información del libro</h3>
+<form method="post">
+	<div class="row">
+        <div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<img src="{{ libro.portada }}"  width="100" height="100">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+                <label for="#">#</label>
+				<input value="{{ libro_id }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Título del libro: </label>
+				<input  value="{{ libro.titulo }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Autores: </label>
+                {% for autor in libro.autores_id %}
+				    <input value="{{ autores[autor].nombre }} {{ autores[autor].apellidos }}">
+                {% endfor %}
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Editor: </label>
+				<input value="{{ editores[libro.editor_id].nombre }}">
+			</div>
+		</div>
+		<div class="col-md-8 col-md-offset-0">
+			<div class="form-group">
+				<label for="#">Fecha de publicación: </label>
+				<input value="{{ libro.fecha_publicacion }}">
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8 col-md-offset-1">
+			<div class="form-group">
+                <a class="btn btn-info" href="javascript:history.back();">Regresar</a>
+			</div>
+		</div>
+</form>
+</div>
+{% endblock %}
+{% block extrajs %}
+    <script type="text/javascript">
+        $("#verE :input").prop("disabled", true);
+    </script>
+{% endblock %}
