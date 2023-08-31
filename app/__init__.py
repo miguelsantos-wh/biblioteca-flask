@@ -22,7 +22,8 @@ def create_app():
     bootstrap = Bootstrap(app)
 
     app.config['SECRET_KEY'] = 'SUPER SECRETO'
-    app.config['UPLOADED_PHOTOS_DEST'] = 'media'
+    app.config['UPLOADED_PHOTOS_DEST'] = 'app/media'
+    app.config['UPLOADED_PHOTOS_PATH'] = 'media'
     app.config.from_object(Config)
 
     # Configuración de la carga de archivos

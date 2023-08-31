@@ -202,8 +202,9 @@ def agregar_libro():
         portada_path = ''
         if portada:
             filename = secure_filename(portada.filename)
-            portada_path = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
-            portada.save(portada_path)
+            portada_dest = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
+            portada.save(portada_dest)
+            portada_path = os.path.join(app.config['UPLOADED_PHOTOS_PATH'], filename)
         fecha_publicacion_str = libro_form.fecha_publicacion.data.strftime('%Y-%m-%d')
         fecha_publicacion = datetime.strptime(fecha_publicacion_str, '%Y-%m-%d')
         fecha_timestamp = firestore.SERVER_TIMESTAMP if fecha_publicacion is None else fecha_publicacion
@@ -214,7 +215,6 @@ def agregar_libro():
     return render_template('libro_form.html', libro_form=libro_form)
 
 
-# Configuración de la ruta estática para la carpeta de medios
 @app.route('/media/<path:filename>')
 def media_files(filename):
     return send_from_directory('media', filename)
@@ -272,8 +272,9 @@ def editar_libro(libro_id):
             portada_path = libro_data.to_dict().get('portada')
             if portada:
                 filename = secure_filename(portada.filename)
-                portada_path = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
-                portada.save(portada_path)
+                portada_dest = os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)
+                portada.save(portada_dest)
+                portada_path = os.path.join(app.config['UPLOADED_PHOTOS_PATH'], filename)
             fecha_publicacion_str = libro_form.fecha_publicacion.data.strftime('%Y-%m-%d')
             fecha_publicacion = datetime.strptime(fecha_publicacion_str, '%Y-%m-%d')
             fecha_timestamp = firestore.SERVER_TIMESTAMP if fecha_publicacion is None else fecha_publicacion
