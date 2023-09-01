@@ -20,10 +20,21 @@
 ### 4. Instalar requerimientos
     pip install -r requirements.txt
 
-### 5. Agregar worker de tipo Flask Server
+### 5. Declarar variables de ambiente
+    export FLASK_APP=main.py
+    export FLASK_DEBUG=1
+    export FLASK_ENV=development
+
+### 5. Corremos el proyecto
+    flask run
+
+### 6. Agregar worker de tipo Flask Server si se quiere correr desde Pycharm
     Target: main.py
     FLASK_ENV: development
     FLASK_DEBUG: check
     
     Environment variable:
     GOOGLE_CLOUD_PROJECT=platzii-flask
+
+### 7. Verificamos en el navegador con el puerto 5000
+    localhost:5000
